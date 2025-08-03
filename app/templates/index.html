@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <p>Hi {{current_user.username}}, Welcome to my Microblog website.</p>
+    <table>
+        {% for post in posts %}
+            {% include "post.html" %}
+        {% endfor %}
+    </table>
+{% endblock content %}

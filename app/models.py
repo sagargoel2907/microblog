@@ -1,0 +1,58 @@
+from app import db
+from typing import Optional
+import sqlalchemy as sa
+import sqlalchemy.orm as so
+from datetime import datetime, timezone
+from flask_login import UserMixin
+from app import login
+from werkzeug.security import generate_password_hash, check_password_hash
+from hashlib import md5
+
+
+class User(UserMixin, db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    username: so.Mapped[str] = so.mapped_column(
+        sa.String(64), index=True, unique=True)
+    email: so.Mapped[str] = so.mapped_column(
+        sa.String(120), index=True, unique=True)
+    password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
+
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(
+        back_populates='author', passive_deletes=True)
+    about_me: so.Mapped[Optional[str]] = so.mapped_column(sa.String(140))
+    last_seen: so.Mapped[Optional[datetime]] = so.mapped_column(
+        sa.DateTime(), default=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+    def set_password(self, password: str):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password: str) -> bool:
+        return check_password_hash(self.password_hash, password)
+
+    def avatar(self, size):
+        hash = md5(self.email.lower().encode('utf-8')).hexdigest()
+        url = f'https://www.gravatar.com/avatar/{hash}?s={size}&d=identicon'
+        return url
+
+
+class Post(db.Model):
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    body: so.Mapped[str] = so.mapped_column(sa.String(140))
+    timestamp: so.Mapped[datetime] = so.mapped_column(
+        sa.DateTime(), index=True, default=lambda: datetime.now(timezone.utc))
+    user_id: so.Mapped[int] = so.mapped_column(
+        sa.ForeignKey(User.id, ondelete='CASCADE'), index=True)
+
+    author: so.Mapped[User] = so.relationship(back_populates='posts')
+
+    def __repr__(self):
+        return f'<Post {self.body}>'
+
+
+@login.user_loader
+def load_user(id: str) -> Optional[User]:
+    # This function is used by Flask-Login to load a user from the database
+    return db.session.get(User, int(id))

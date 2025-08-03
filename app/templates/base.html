@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}
+        <title>{{ title }} - Microblog</title>
+    {% else %}
+        <title>Microblog</title>
+    {% endif %}
+</head>
+<body>
+    <div>
+        Microblog: <a href="/index">Home</a> <a href="{{ url_for('login_view')}}"></a>
+        {% if current_user.is_anonymous %}
+            <a href="{{ url_for('login_view') }}">Login</a>
+            <a href="{{ url_for('register_view') }}">Register</a>
+        {% else %}
+            <a href="{{ url_for('user_profile_view') }}">Profile</a>
+            <a href="{{ url_for('logout_view') }}">Logout</a>
+        {% endif %}
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <hr>
+    {% block content %}{% endblock content %}
+</body>
+</html>

@@ -1,0 +1,5 @@
+.flaskenv
+app.db
+logs/
+instance/
+__pycache__
