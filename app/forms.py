@@ -51,5 +51,5 @@ class EditProfileForm(FlaskForm):
             if user:
                 raise ValidationError('Username already taken')
 
-
-
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
