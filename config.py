@@ -14,3 +14,4 @@ class Config:
     MAIL_USERNAME = getenv('MAIL_USERNAME')
     MAIL_PASSWORD = getenv('MAIL_PASSWORD')
     ADMINS = ['sagargoel2907@gmail.com']
+    POSTS_PER_PAGE = 3

@@ -11,7 +11,8 @@
 </head>
 <body>
     <div>
-        Microblog: <a href="/index">Home</a> <a href="{{ url_for('login_view')}}"></a>
+        Microblog: <a href="{{ url_for('index')}}">Home</a>
+        <a href="{{ url_for('explore')}}">Explore</a>
         {% if current_user.is_anonymous %}
             <a href="{{ url_for('login_view') }}">Login</a>
             <a href="{{ url_for('register_view') }}">Register</a>

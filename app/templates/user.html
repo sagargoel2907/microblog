@@ -4,7 +4,7 @@
     <table>
         <tr valign="top">
             <td>
-                <Img src="{{ user.avatar(2) }}" alt="{{user.username}} avatar image" style="width: 8em;"/>
+                <Img src="{{ user.avatar(32) }}" alt="{{user.username}} avatar image" style="width: 8em;"/>
             </td>
             <td>
                 <h2>User: {{ user.username }}</h2>
@@ -37,4 +37,10 @@
             {% include "post.html" %}
         {% endfor %}
     </table>
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Prev</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Next</a>
+    {% endif %}
 {% endblock content %}

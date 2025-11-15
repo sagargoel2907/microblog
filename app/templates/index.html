@@ -2,9 +2,30 @@
 
 {% block content %}
     <p>Hi {{current_user.username}}, Welcome to my Microblog website.</p>
+    {% if form %}
+        <form action="" method='post'>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.post.label }}</br>
+            {{ form.post(cols=32, rows=4, placeholder='say something') }}
+            {% for error in form.post.errors %}
+                <span style='color:red'>{{ error }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.submit(value='Create Post') }}
+        </p>
+    </form>
+    {% endif %}
     <table>
         {% for post in posts %}
             {% include "post.html" %}
         {% endfor %}
     </table>
+    {% if prev_url %}
+        <a href="{{ prev_url }}">Prev</a>
+    {% endif %}
+    {% if next_url %}
+        <a href="{{ next_url }}">Next</a>
+    {% endif %}
 {% endblock content %}

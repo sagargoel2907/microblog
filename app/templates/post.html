@@ -1,10 +1,15 @@
 <tr valign="center">
   <td>
     <img
-      src="{{ post.author.avatar(2) }}"
+      src="{{ post.author.avatar(32) }}"
       alt="{{post.author.username}} avatar image"
       style="width: 4em;"
     />
   </td>
-  <td><strong>{{post.author.username}}</strong> says: <br/> {{post.body}}</td>
+  <td><a href="{{ url_for('user_profile_view', username=post.author.username) }}"><strong>{{post.author.username}}</strong></a>
+    {%if post.author.username==current_user.username %}
+      <em>(you)</em>
+    {%endif%} 
+    says: <br/> {{post.body}}
+  </td>
 </tr>
