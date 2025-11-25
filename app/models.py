@@ -7,6 +7,9 @@ from flask_login import UserMixin
 from app import login
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import sha256
+import jwt
+from time import time
+from app import app
 
 followers = sa.Table('followers',
                      db.metadata,
@@ -78,14 +81,29 @@ class User(UserMixin, db.Model):
     def following_posts(self):
         Author = so.aliased(User)
         Follower = so.aliased(User)
-        return ( 
+        return (
             sa.select(Post)
             .join((Post.author.of_type(Author)))
             .join(Author.followers.of_type(Follower), isouter=True)
-            .where(sa.or_(Follower.id==self.id, Post.user_id==self.id))
+            .where(sa.or_(Follower.id == self.id, Post.user_id == self.id))
             .group_by(Post)
             .order_by(Post.timestamp.desc())
         )
+
+    def get_reset_password_token(self, expires_In=600):
+        payload = {'reset_password': self.id, 'exp': time() + expires_In}
+        return jwt.encode(payload=payload, key=app.config['SECRET_KEY'], algorithm='HS256')
+
+    @staticmethod
+    def verify_reset_password(token):
+        try:
+            payload = jwt.decode(
+                jwt=token, key=app.config['SECRET_KEY'], algorithms=['HS256'])
+            id = payload['reset_password']
+        except:
+            return None
+        return db.session.get(User, id)
+
 
 class Post(db.Model):
     id: so.Mapped[int] = so.mapped_column(primary_key=True)

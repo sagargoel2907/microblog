@@ -26,7 +26,8 @@
             {{ form.submit() }}
         </p>
         <p>
-            New User? <a href="{{ url_for('register_view')}}">Click to register</a>
+            New User? <a href="{{ url_for('register_view')}}">Register</a>
+            Forgot Paswword? <a href="{{ url_for('reset_password_request')}}">Reset Password</a>
         </p>
     </form>
 {% endblock content %}
