@@ -28,13 +28,9 @@ def index():
         return redirect(url_for('index'))
 
     page = request.args.get('page', 1, type=int)
-    posts = db.paginate(current_user.following_posts(
+    pagination = db.paginate(current_user.following_posts(
     ), page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
-    prev_url = url_for(
-        'index', page=posts.prev_num) if posts.has_prev else None
-    next_url = url_for(
-        'index', page=posts.next_num) if posts.has_next else None
-    return render_template('index.html', posts=posts.items, title='Home', form=form, prev_url=prev_url, next_url=next_url)
+    return render_template('index.html', posts=pagination.items, title='Home', form=form, pagination=pagination)
 
 
 @app.route('/explore')
@@ -43,14 +39,9 @@ def explore():
     page = request.args.get('page', 1, type=int)
     query = sa.select(Post).where(
         Post.author != current_user).order_by(Post.timestamp.desc())
-    posts = db.paginate(
+    pagination = db.paginate(
         query, page=page, per_page=app.config['POSTS_PER_PAGE'], error_out=False)
-    prev_url = url_for(
-        'explore', page=posts.prev_num) if posts.has_prev else None
-    next_url = url_for(
-        'explore', page=posts.next_num) if posts.has_next else None
-    return render_template('index.html', posts=posts.items, title='Explore', prev_url=prev_url, next_url=next_url)
-
+    return render_template('index.html', posts=pagination.items, title='Explore', pagination=pagination)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_view():
