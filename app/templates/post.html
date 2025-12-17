@@ -15,6 +15,6 @@
         {%if post.author.username==current_user.username %}
             <em>(you)</em>
         {%endif%} 
-        says: <br/> {{post.body}}
+        said {{ moment(post.timestamp).fromNow() }}: <br/> {{post.body}}
     </td>
 </tr>
