@@ -4,36 +4,37 @@ from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Le
 from app import db
 import sqlalchemy as sa
 from app.models import User
+from flask_babel import lazy_gettext as _l
 
 
 class LoginForm(FlaskForm):
-    username = StringField(label='Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember me', default=False)
-    submit = SubmitField('Login')
+    username = StringField(label=_l('Username'), validators=[DataRequired()])
+    password = PasswordField(_l('Password'), validators=[DataRequired()])
+    remember_me = BooleanField(_l('Remember me'), default=False)
+    submit = SubmitField(_l('Login'))
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField(label='Username', validators=[DataRequired()])
-    email = EmailField(label='Email', validators=[DataRequired(), Email()])
-    password = PasswordField(label='Password', validators=[DataRequired()])
-    password2 = PasswordField(label='Confirm password', validators=[
+    username = StringField(label=_l('Username'), validators=[DataRequired()])
+    email = EmailField(label=_l('Email'), validators=[DataRequired(), Email()])
+    password = PasswordField(label=_l('Password'), validators=[DataRequired()])
+    password2 = PasswordField(label=_l('Confirm password'), validators=[
                               DataRequired(), EqualTo('password')])
     about_me = StringField()
 
-    submit = SubmitField(label='Register')
+    submit = SubmitField(label=_l('Register'))
 
     def validate_username(self, username):
         user = db.session.scalar(sa.select(User).where(
             User.username == username.data))
         if user is not None:
-            raise ValidationError('Please use different username')
+            raise ValidationError(_l('Please use different username'))
 
     def validate_email(self, email):
         user = db.session.scalar(
             sa.select(User).where(User.email == email.data))
         if user is not None:
-            raise ValidationError('Please use a different email')
+            raise ValidationError(_l('Please use a different email'))
 
 
 class EditProfileForm(FlaskForm):
@@ -50,28 +51,28 @@ class EditProfileForm(FlaskForm):
             user = db.session.scalar(sa.select(User).where(
                 User.username == username.data))
             if user:
-                raise ValidationError('Username already taken')
+                raise ValidationError(_l('Username already taken'))
 
 
 class EmptyForm(FlaskForm):
-    submit = SubmitField('Submit')
+    submit = SubmitField(_l('Submit'))
 
 
 class PostForm(FlaskForm):
-    post = TextAreaField(label='Create new post', validators=[
+    post = TextAreaField(label=_l('Create new post'), validators=[
                          DataRequired(), Length(min=1, max=140)])
-    submit = SubmitField(label='Submit')
+    submit = SubmitField(label=_l('Submit'))
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = EmailField(label='Email address', validators=[
+    email = EmailField(label=_l('Email address'), validators=[
                        Email(), DataRequired()])
-    submit = SubmitField(label='Request reset password')
+    submit = SubmitField(label=_l('Request reset password'))
 
 
 class ResetPasswordForm(FlaskForm):
-    password = PasswordField(label='Enter new password',
+    password = PasswordField(label=_l('Enter new password'),
                              validators=[DataRequired()])
-    password2 = PasswordField(label='Confirm new password', validators=[
+    password2 = PasswordField(label=_l('Confirm new password'), validators=[
                               DataRequired(), EqualTo('password')])
-    submit = SubmitField(label='Reset Passeord')
+    submit = SubmitField(label=_l('Reset Passeord'))

@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-    <h2> Confirm account deletion?</h2>
+    <h2>{{ _('Confirm account deletion?') }}</h2>
     <form method="post">
-        <input type="submit" value="Delete account">
-        <a href="{{url_for('index')}}">Cancel</a>
+        <input type="submit" value="{{ _('Delete account') }}">
+        <a href="{{url_for('index')}}">{{ _('Cancel') }}</a>
     </form>
 {% endblock content %}

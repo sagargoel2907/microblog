@@ -2,9 +2,9 @@
 {% import "bootstrap_wtf.html" as wtf %}
 
 {% block content %}
-    <h1>Sign up</h1>
+    <h1>{{ _('Sign up') }}</h1>
     {{ wtf.quick_form(form) }}
     <p>
-        Already registered? <a href="{{ url_for('login_view')}}">Click to login</a>
+        {{ _('Already registered?') }} <a href="{{ url_for('login_view')}}">{{ _('Click to login') }}</a>
     </p>
 {% endblock content %}

@@ -1,10 +1,11 @@
-from flask import Flask
+from flask import Flask, request
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_moment import Moment
+from flask_babel import Babel, _, lazy_gettext as _l
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import logging
 import os
@@ -16,7 +17,15 @@ mail = Mail(app)
 migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view='login_view'
+login.login_message = _l('Please login to access this page')
 moment = Moment(app)
+
+def get_locale():
+    print(request.accept_languages.best_match(app.config['LANGUAGES']))
+    print(request.accept_languages)
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+babel = Babel(app, locale_selector=get_locale)
 
 if not app.debug:
     if app.config['MAIL_SERVER']:

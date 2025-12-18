@@ -15,3 +15,4 @@ class Config:
     MAIL_PASSWORD = getenv('MAIL_PASSWORD')
     ADMINS = ['sagargoel2907@gmail.com']
     POSTS_PER_PAGE = 3
+    LANGUAGES = ['en', 'hi']
